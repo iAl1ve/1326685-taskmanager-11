@@ -1,22 +1,30 @@
 import {createElement} from "../utils.js";
 
-const createSortingTemplate = () => {
+const createTaskSortMarkup = (sort) => {
+  const {type, text} = sort;
+  return (
+    `<a href="#" class="board__filter" data-sort-type="${type}">${text}</a>`
+  );
+};
+
+const createSortingTemplate = (sorts) => {
+  const sortsMarkup = sorts.map((it, i) => createTaskSortMarkup(it, i === 0)).join(`\n`);
+
   return (
     `<div class="board__filter-list">
-      <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
-      <a href="#" class="board__filter" data-sort-type="date-up">SORT BY DATE up</a>
-      <a href="#" class="board__filter" data-sort-type="date-down">SORT BY DATE down</a>
+      ${sortsMarkup}
     </div>`
   );
 };
 
 export default class Sort {
-  constructor() {
+  constructor(sorts) {
     this._element = null;
+    this._sorts = sorts;
   }
 
   getTemplate() {
-    return createSortingTemplate();
+    return createSortingTemplate(this._sorts);
   }
 
   getElement() {
