@@ -10,12 +10,11 @@ import SortComponent from "./components/sort.js";
 import {generateTasks} from "./mock/task.js";
 import {generateFilters} from "./mock/filter.js";
 import {render} from "./utils.js";
+import {KEY_ESC, KEY_ESC_CODE, SORTS_NAME} from "./const.js";
 
 const TASK_COUNT = 24;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-const KEY_ESC = `Escape`;
-const KEY_ESC_CODE = 27;
 
 const renderTask = (taskListElement, task) => {
   const replaceTaskToEdit = () => {
@@ -62,7 +61,7 @@ const renderBoard = (boardComponent, tasks) => {
     return;
   }
 
-  render(boardComponent.getElement(), new SortComponent().getElement());
+  render(boardComponent.getElement(), new SortComponent(SORTS_NAME).getElement());
   render(boardComponent.getElement(), new TasksComponent().getElement());
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
