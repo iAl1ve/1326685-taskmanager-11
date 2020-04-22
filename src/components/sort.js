@@ -1,4 +1,5 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {SORTS_NAME} from "../const.js";
 
 const createTaskSortMarkup = (sort) => {
   const {type, text} = sort;
@@ -8,7 +9,7 @@ const createTaskSortMarkup = (sort) => {
 };
 
 const createSortingTemplate = (sorts) => {
-  const sortsMarkup = sorts.map((it, i) => createTaskSortMarkup(it, i === 0)).join(`\n`);
+  const sortsMarkup = sorts.map((it) => createTaskSortMarkup(it)).join(`\n`);
 
   return (
     `<div class="board__filter-list">
@@ -17,24 +18,39 @@ const createSortingTemplate = (sorts) => {
   );
 };
 
-export default class Sort {
+export default class Sort extends AbstractComponent {
   constructor(sorts) {
-    this._element = null;
+    super();
     this._sorts = sorts;
+    this._currenSortType = SORTS_NAME[0].type;
   }
 
   getTemplate() {
     return createSortingTemplate(this._sorts);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  getSortType() {
+    return this._currenSortType;
   }
 
-  removeElement() {
-    this._element = null;
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+
+      const sortType = evt.target.dataset.sortType;
+
+      if (this._currenSortType === sortType) {
+        return;
+      }
+
+      this._currenSortType = sortType;
+
+      handler(this._currenSortType);
+    });
+
   }
 }
